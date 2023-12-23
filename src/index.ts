@@ -1,1 +1,1 @@
-import './app-component';
+import './components/app-component';
