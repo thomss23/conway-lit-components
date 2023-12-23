@@ -12,7 +12,8 @@ export class AppComponent extends LitElement {
       text-align: center;
       color: #008170;
       font-size: 50px;
-      cursor: pointer;
+      margin-top: 10px;
+      margin-bottom: 10px;
     }
 
     h2 {

@@ -16,6 +16,7 @@ export class GridComponent extends LitElement {
       max-width: 1000px; 
       border: 10px solid #232D3F;
       border-radius: 10px;
+      cursor: pointer;
     }
 
     .grid-item {
