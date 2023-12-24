@@ -1,6 +1,8 @@
 import { LitElement, html, css } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
+import './tile-component'
+
 // hardcode for now grid size 50 x 30
 @customElement('grid-component')
 export class GridComponent extends LitElement {
@@ -18,19 +20,11 @@ export class GridComponent extends LitElement {
       border-radius: 10px;
       cursor: pointer;
     }
-
-    .grid-item {
-      border: 1px solid #005B41; 
-      margin: 0;
-      /* background-color: #0F0F0F; */
-      background-color: #b9b9b9;
-      padding-top: 100%;
-    }
   `
 
 render() {
-  const gridItems = new Array(50 * 30).fill(0).map((_, index) => 
-    html`<div class="grid-item"></div>`
+  const gridItems = new Array(50 * 30).fill(0).map((_) => 
+    html`<tile-component></tile-component>`
   );
 
   return html`
