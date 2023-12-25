@@ -8,7 +8,7 @@ export class ButtonComponent extends LitElement {
     button {
       background-color: #005B41;
       border: none;
-      color: white;
+      color: #b9b9b9;
       padding: 15px 32px;
       text-align: center;
       text-decoration: none;
@@ -23,9 +23,7 @@ export class ButtonComponent extends LitElement {
       background-color: #232D3F;
     }
   `
-
-  //TODO: handle dispatching event
-  private handleClick(e: Event) {
+  private dispatchButtonClickEvent(e: CustomEvent) {
     this.dispatchEvent(new CustomEvent('button-click', {
       detail: { name: this.name },
       bubbles: true, 
@@ -40,7 +38,7 @@ export class ButtonComponent extends LitElement {
   render() {
     return html`
       <div>
-        <button @click="${this.handleClick}">${this.name}</button>
+        <button @click="${this.dispatchButtonClickEvent}">${this.name}</button>
       </div>
       `;
   }

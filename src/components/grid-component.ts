@@ -1,11 +1,15 @@
 import { LitElement, html, css } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 
 import './tile-component'
 
 // hardcode for now grid size 50 x 30
 @customElement('grid-component')
 export class GridComponent extends LitElement {
+
+
+  @property({type: Array<Number>})
+  public gridState: number[][]
 
   static styles = css`
     .container {
@@ -23,13 +27,20 @@ export class GridComponent extends LitElement {
   `
 
 render() {
-  const gridItems = new Array(50 * 30).fill(0).map((_) => 
-    html`<tile-component></tile-component>`
-  );
+
+  const renderedItems = this.gridState.map((row, indexRow) => {
+    return row.map((col, indexCol) => {
+      if (col === 1) {
+        return html`<tile-component .isTurnedOn=${true}></tile-component>`;
+      } else {
+        return html`<tile-component .isTurnedOn=${false}></tile-component>`;
+      }
+    });
+  });
 
   return html`
     <div class="container">
-      ${gridItems}
+      ${renderedItems}
     </div>
   `;
 }

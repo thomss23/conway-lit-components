@@ -4,11 +4,8 @@ import { customElement, property } from 'lit/decorators.js';
 @customElement('tile-component')
 export class TileComponent extends LitElement {
 
-  @property()
-  isTurnedOn = false;
-
-  private colorTurnedOff = css`#b9b9b9`;
-  private colorTurnedOn = css`#0F0F0F` 
+  @property({ type: Boolean })
+  isTurnedOn: boolean = false;
 
   static styles = css`
     div {
@@ -20,8 +17,10 @@ export class TileComponent extends LitElement {
   `
 
   render() {
+    const backgroundColor = this.isTurnedOn ? '#b9b9b9' : '#0F0F0F';
+
     return html`
-      <div style="background-color: ${this.isTurnedOn ? this.colorTurnedOn : this.colorTurnedOff};"></div>
+      <div style="background-color: ${backgroundColor};"></div>
     `;
   }
 }
