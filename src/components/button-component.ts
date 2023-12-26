@@ -16,6 +16,7 @@ export class ButtonComponent extends LitElement {
       font-size: 16px; /* Smaller font size */
       border-radius: 8px;
       font-family: monospace;
+      cursor: pointer
     }
     
     button:hover {
