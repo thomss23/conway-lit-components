@@ -5,17 +5,6 @@ import './grid-component'
 import './buttons-component'
 import { ClickEvent } from '../types/interfaces';
 
-/*
-
-Game Rules:
-
-- Any live cell with fewer than two live neighbours dies, as if by underpopulation.
-- Any live cell with two or three live neighbours lives on to the next generation.
-- Any live cell with more than three live neighbours dies, as if by overpopulation.
-- Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-
-*/
-
 interface GameState {
   generation: number;
   gridState: number[][];
@@ -25,27 +14,27 @@ interface GameState {
 export class AppComponent extends LitElement {
 
   static styles = css`
-    h1 {
+    h1, h2 {
       text-align: center;
       color: #008170;
-      font-size: 50px;
       margin-top: 10px;
       margin-bottom: 10px;
     }
-
-    h2 {
-      font-size: 50px;
-      text-align: center;
-      color: #008170;
-      margin-top: 10px;
+    
+    h1 {
+      font-size: calc(16px + 2vw); /* Responsive font size */
     }
-
+    
+    h2 {
+      font-size: calc(14px + 2vw); /* Responsive font size */
+    }
+  
   `
 
   @property({type: Object})
   state: GameState = {
     generation: 0,
-    gridState:  Array(50).fill(0).map(() => Array(30).fill(0))
+    gridState:  Array(30).fill(0).map(() => Array(50).fill(0))
   }
 
 
@@ -61,27 +50,37 @@ export class AppComponent extends LitElement {
     this.intervaldId = setInterval(this.play.bind(this), this.speed)
   }
 
+  handleGridUpdate(e: CustomEvent) {
+    const { rowIndex, colIndex } = e.detail;
+    let newGridState = [...this.state.gridState];
+    newGridState[rowIndex][colIndex] = newGridState[rowIndex][colIndex] === 1 ? 0 : 1;
+    this.state = { ...this.state, gridState: newGridState };
+  }
+
   private play() {
-    const gridState: number[][] = this.state.gridState.map((row,indexRow) => {
-      return row.map((col, indexCol) => {
-        const aliveNeighbors = this.countAliveNeighbors(indexRow, indexCol);
-
-        if (col) {
-          if (aliveNeighbors < 2 || aliveNeighbors > 3) {
-            return 0;
-          } else {
-            return 1;
-          }
-        } else {
-          if (aliveNeighbors === 3) {
-            return 1;
-          }
+    let newGridState = [];
+    for (let indexRow = 0; indexRow < this.state.gridState.length; indexRow++) {
+        let newRow = [];
+        for (let indexCol = 0; indexCol < this.state.gridState[indexRow].length; indexCol++) {
+            const aliveNeighbors = this.countAliveNeighbors(indexRow, indexCol);
+            let newCellState: number;
+    
+            if (this.state.gridState[indexRow][indexCol] === 1) {
+                if (aliveNeighbors < 2 || aliveNeighbors > 3) {
+                    newCellState = 0;
+                } else {
+                    newCellState = 1;
+                }
+            } else {
+                newCellState = aliveNeighbors === 3 ? 1 : 0;
+            }
+    
+            newRow.push(newCellState);
         }
+        newGridState.push(newRow);
+    }
 
-      });
-    });
-
-    this.state = { generation: this.state.generation + 1, gridState: gridState };
+    this.state = { generation: this.state.generation + 1, gridState: newGridState };
   }
 
   private countAliveNeighbors(currentRowIndex: number, currentColIndex: number) {
@@ -173,10 +172,12 @@ export class AppComponent extends LitElement {
   }
 
   render() {
+    console.log(this.state.gridState);
+
     return html`
       <h1>Conway's Game Of Life</h1>
       <buttons-component @button-click=${this.handleButtonClick}></buttons-component>
-      <grid-component .gridState=${this.state.gridState} ></grid-component>
+      <grid-component @grid-update=${this.handleGridUpdate} .gridState=${this.state.gridState} ></grid-component>
       <h2>Generation: ${this.state.generation}</h2>
     `;
   }

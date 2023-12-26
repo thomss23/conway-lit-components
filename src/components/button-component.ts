@@ -9,19 +9,26 @@ export class ButtonComponent extends LitElement {
       background-color: #005B41;
       border: none;
       color: #b9b9b9;
-      padding: 15px 32px;
+      padding: 10px 20px; /* Smaller padding */
       text-align: center;
       text-decoration: none;
       display: inline-block;
-      font-size: 20px;
-      cursor: pointer;
+      font-size: 16px; /* Smaller font size */
       border-radius: 8px;
       font-family: monospace;
     }
-
+    
     button:hover {
       background-color: #232D3F;
     }
+    
+    @media screen and (max-width: 600px) {
+      button {
+        padding: 8px 16px; 
+        font-size: 14px; 
+      }
+    }
+  
   `
   private dispatchButtonClickEvent(e: CustomEvent) {
     this.dispatchEvent(new CustomEvent('button-click', {

@@ -12,7 +12,9 @@ export class ButtonsComponent extends LitElement {
       justify-content: center;
       width: 100%;
       gap: 5px;
+      flex-wrap: wrap; 
     }
+  
   `
   
   render() {

@@ -3,7 +3,6 @@ import { customElement, property } from 'lit/decorators.js';
 
 import './tile-component'
 
-// hardcode for now grid size 50 x 30
 @customElement('grid-component')
 export class GridComponent extends LitElement {
 
@@ -22,22 +21,42 @@ export class GridComponent extends LitElement {
       max-width: 1000px; 
       border: 10px solid #232D3F;
       border-radius: 10px;
-      cursor: pointer;
     }
+    
+    @media screen and (max-width: 600px) {
+      .container {
+        max-width: 300px;
+        grid-template-columns: repeat(50, minmax(0, 1fr)); 
+      }
+    }
+  
   `
 
+  handleTileClick(e: CustomEvent) {
+    const {rowIndex, colIndex} = e.detail;
+    this.dispatchEvent(new CustomEvent('grid-update', { detail: { rowIndex: rowIndex, colIndex:colIndex }, bubbles: true, composed: true }));
+  }
+
   render() {
-
-    const renderedItems = this.gridState.map((row) => {
-      return row.map((col) => {
-        if (col === 1) {
-          return html`<tile-component .isTurnedOn=${true}></tile-component>`;
-        } else {
-          return html`<tile-component .isTurnedOn=${false}></tile-component>`;
-        }
-      });
-    });
-
+    
+    let renderedItems = [];
+    for (let rowIndex = 0; rowIndex < this.gridState.length; rowIndex++) {
+      let row = this.gridState[rowIndex];
+      let tiles = [];
+      for (let colIndex = 0; colIndex < row.length; colIndex++) {
+        let tile = html`
+          <tile-component 
+            .isTurnedOn=${row[colIndex] === 1}
+            .rowIndex=${rowIndex}
+            .colIndex=${colIndex}
+            @toggle-tile=${this.handleTileClick}
+          ></tile-component>`;
+        tiles.push(tile);
+      }
+      renderedItems.push(tiles);
+    }
+  
+    console.log(renderedItems)
     return html`
       <div class="container">
         ${renderedItems}
