@@ -38,11 +38,13 @@ export class GridComponent extends LitElement {
   }
 
   render() {
-    
     let renderedItems = [];
+
     for (let rowIndex = 0; rowIndex < this.gridState.length; rowIndex++) {
+
       let row = this.gridState[rowIndex];
       let tiles = [];
+
       for (let colIndex = 0; colIndex < row.length; colIndex++) {
         let tile = html`
           <tile-component 
@@ -51,12 +53,12 @@ export class GridComponent extends LitElement {
             .colIndex=${colIndex}
             @toggle-tile=${this.handleTileClick}
           ></tile-component>`;
+
         tiles.push(tile);
       }
       renderedItems.push(tiles);
     }
   
-    console.log(renderedItems)
     return html`
       <div class="container">
         ${renderedItems}

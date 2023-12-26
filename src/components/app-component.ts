@@ -122,7 +122,6 @@ export class AppComponent extends LitElement {
         }
       });
     });
-    console.log(gridState)
     this.state = {generation: 0, gridState: gridState};
   }
 
@@ -172,8 +171,6 @@ export class AppComponent extends LitElement {
   }
 
   render() {
-    console.log(this.state.gridState);
-
     return html`
       <h1>Conway's Game Of Life</h1>
       <buttons-component @button-click=${this.handleButtonClick}></buttons-component>
