@@ -34,10 +34,7 @@ jobs:
         echo "Listing dist directory:"
         ls -l dist
 
-
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
+    - name: Deploy 🚀
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist
-        allow_empty_commit: true
+        folder: dist 
