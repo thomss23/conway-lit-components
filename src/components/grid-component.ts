@@ -26,22 +26,22 @@ export class GridComponent extends LitElement {
     }
   `
 
-render() {
+  render() {
 
-  const renderedItems = this.gridState.map((row, indexRow) => {
-    return row.map((col, indexCol) => {
-      if (col === 1) {
-        return html`<tile-component .isTurnedOn=${true}></tile-component>`;
-      } else {
-        return html`<tile-component .isTurnedOn=${false}></tile-component>`;
-      }
+    const renderedItems = this.gridState.map((row) => {
+      return row.map((col) => {
+        if (col === 1) {
+          return html`<tile-component .isTurnedOn=${true}></tile-component>`;
+        } else {
+          return html`<tile-component .isTurnedOn=${false}></tile-component>`;
+        }
+      });
     });
-  });
 
-  return html`
-    <div class="container">
-      ${renderedItems}
-    </div>
-  `;
-}
+    return html`
+      <div class="container">
+        ${renderedItems}
+      </div>
+    `;
+  }
 }

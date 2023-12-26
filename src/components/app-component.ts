@@ -14,9 +14,6 @@ Game Rules:
 - Any live cell with more than three live neighbours dies, as if by overpopulation.
 - Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 
-				if (Math.floor(Math.random() * 4) === 1) {
-					gridCopy[i][j] = true;
-				}
 */
 
 interface GameState {
@@ -51,12 +48,69 @@ export class AppComponent extends LitElement {
     gridState:  Array(50).fill(0).map(() => Array(30).fill(0))
   }
 
+
+  constructor() {
+    super();
+    this.speed = 100;
+  }
+
+  private speed: number;
+  private intervaldId: NodeJS.Timeout;
+
   private playGame() {
-    console.log('playing game')
+    this.intervaldId = setInterval(this.play.bind(this), this.speed)
+  }
+
+  private play() {
+    const gridState: number[][] = this.state.gridState.map((row,indexRow) => {
+      return row.map((col, indexCol) => {
+        const aliveNeighbors = this.countAliveNeighbors(indexRow, indexCol);
+
+        if (col) {
+          if (aliveNeighbors < 2 || aliveNeighbors > 3) {
+            return 0;
+          } else {
+            return 1;
+          }
+        } else {
+          if (aliveNeighbors === 3) {
+            return 1;
+          }
+        }
+
+      });
+    });
+
+    this.state = { generation: this.state.generation + 1, gridState: gridState };
+  }
+
+  private countAliveNeighbors(currentRowIndex: number, currentColIndex: number) {
+    let aliveNeighbors = 0;
+    const gridHeight = this.state.gridState.length;
+    const gridWidth = this.state.gridState[0].length;
+
+    for (let i = -1; i <= 1; i++) {
+      for (let j = -1; j <= 1; j++) {
+
+        if (i === 0 && j === 0) continue;
+
+        const neighborRow = currentRowIndex + i;
+        const neighborCol = currentColIndex + j;
+
+        if ((neighborRow >= 0 && neighborRow < gridHeight) && (neighborCol >= 0 && neighborCol < gridWidth)) {
+          if (this.state.gridState[neighborRow][neighborCol]) {
+            aliveNeighbors++;
+          }
+        }  
+
+      }
+    }
+
+    return aliveNeighbors;
   }
 
   private pauseGame() {
-    console.log('pausing game')
+    clearInterval(this.intervaldId);
   }
 
   private seedBoard() {
@@ -70,23 +124,27 @@ export class AppComponent extends LitElement {
       });
     });
     console.log(gridState)
-    this.state = {...this.state, gridState: gridState};
+    this.state = {generation: 0, gridState: gridState};
   }
 
   private decreaseGameSpeed() {
-    console.log('slowing game')
+    clearInterval(this.intervaldId);
+    this.speed = 100;
+    this.playGame();
   }
 
   private increaseGameSpeed() {
-    console.log('fasten game')
+    clearInterval(this.intervaldId);
+    this.speed = 10;
+    this.playGame();
   }
 
   private clearBoard() {
     const gridState = this.state.gridState.map((row) => {
       return row.map(() => 0);
     });
-    console.log(gridState)
-    this.state = {...this.state, gridState: gridState};
+    this.pauseGame();
+    this.state = {generation: 0, gridState: gridState};
   }
   
   private handleButtonClick(e: ClickEvent) {
